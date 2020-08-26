@@ -1,0 +1,38 @@
+---
+- name: Create Nginx config dir
+  file:
+    path: "{{ nginx_config_dir }}"
+    mode: "0755"
+    owner: "{{ nginx_user }}"
+    group: "{{ nginx_group }}"
+    state: directory
+
+- name: Create Nginx .env files
+  template:
+    src: site.conf.j2
+    dest: "{{ nginx_config_dir }}/{{ item.server_name[0] }}.conf"
+    mode: "0660"
+    owner: "{{ nginx_user }}"
+    group: "{{ nginx_group }}"
+  notify: "Restart Nginx"
+  with_items: "{{ nginx_servers }}"
+
+- name: Generate an OpenSSL private key
+  openssl_privatekey:
+    path: "{{ nginx_default_ssl_certificate_key }}"
+  notify: "Restart Nginx"
+
+- name: Generate an OpenSSL Certificate Signing Request
+  openssl_csr:
+    path: "{{ nginx_config_dir }}/docker-nginx.csr"
+    privatekey_path: "{{ nginx_default_ssl_certificate_key }}"
+    common_name: docker-nginx.local
+  notify: "Restart Nginx"
+
+- name: Generate a Self Signed OpenSSL certificate
+  openssl_certificate:
+    path: "{{ nginx_default_ssl_certificate }}"
+    privatekey_path: "{{ nginx_default_ssl_certificate_key }}"
+    csr_path: "{{ nginx_config_dir }}/docker-nginx.csr"
+    provider: selfsigned
+  notify: "Restart Nginx"

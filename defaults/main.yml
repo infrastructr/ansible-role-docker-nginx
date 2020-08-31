@@ -5,7 +5,7 @@ nginx_image: nginx:1.19.2-alpine
 nginx_volume: "{{ nginx_config_dir }}:/etc/nginx/conf.d"
 nginx_compose_project_name: nginx
 nginx_network_name: shared_net_1
-nginx_network_external: false
+nginx_network_external: "false"
 nginx_user: root
 nginx_group: root
 nginx_default_ssl_certificate: "{{ nginx_config_dir }}/docker-nginx.crt"

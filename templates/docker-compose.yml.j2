@@ -12,8 +12,5 @@ services:
       - default
 networks:
   default:
-  {% if nginx_network_external %}
-  external: {{ nginx_network_name }}
-  {% else %}
-  name: {{ nginx_network_name }}
-  {% endif %}
+    external: {{ passbolt_network_external }}
+    name: {{ passbolt_network_name }}

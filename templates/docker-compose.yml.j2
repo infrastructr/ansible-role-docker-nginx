@@ -1,0 +1,19 @@
+version: '3.5'
+services:
+  proxy:
+    image: {{ nginx_image }}
+    restart: unless-stopped
+    volumes:
+      - {{ nginx_volume }}
+    ports:
+      - {{ nginx_http_port }}
+      - {{ nginx_https_port }}
+    networks:
+      - default
+networks:
+  default:
+  {% if nginx_network_external %}
+  external: {{ nginx_network_name }}
+  {% else %}
+  name: {{ nginx_network_name }}
+  {% endif %}

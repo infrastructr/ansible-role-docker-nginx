@@ -1,21 +1,21 @@
 ---
 nginx_dir: /etc/docker-nginx
 nginx_config_dir: /etc/docker-nginx/conf.d
+nginx_image: nginx:1.19.2-alpine
+nginx_volume: "{{ nginx_config_dir }}:/etc/nginx/conf.d"
 nginx_compose_project_name: nginx
+nginx_network_name: shared_net_1
+nginx_network_external: false
 nginx_user: root
 nginx_group: root
 nginx_default_ssl_certificate: "{{ nginx_config_dir }}/docker-nginx.crt"
 nginx_default_ssl_certificate_key: "{{ nginx_config_dir }}/docker-nginx.pem"
-nginx_http_port: 80
-nginx_https_port: 443
-nginx_http_bind_address: 0.0.0.0
-nginx_https_bind_address: 0.0.0.0
+nginx_http_port: 80:80
+nginx_https_port: 443:443
 nginx_servers:
   - server_name:
       - test.exampl.org
     listen:
       - 80
       - 443 ssl
-    ssl_certificate:
-    ssl_certificate_key:
     proxy_pass: http://example.org/

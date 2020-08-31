@@ -16,9 +16,9 @@
     group: "{{ nginx_group }}"
   notify: "Restart Nginx"
 
-- name: Copy docker-compose.yml
-  copy:
-    src: docker-compose.yml
+- name: Create docker-compose.yml
+  template:
+    src: docker-compose.yml.j2
     dest: "{{ nginx_dir }}/docker-compose.yml"
     mode: "0644"
     owner: "{{ nginx_user }}"
